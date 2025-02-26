@@ -1,0 +1,6 @@
+!.github
+*
+!.gitignore
+!*.tex
+!LICENSE
+!README.md

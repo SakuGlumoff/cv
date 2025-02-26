@@ -1,0 +1,360 @@
+\documentclass{article}
+
+% Packages:
+% For adjusting page geometry
+\usepackage[
+  % Set margins without considering header and footer
+  ignoreheadfoot,
+  % Seperation between body and page edge from the top
+  top=2 cm,
+  % Seperation between body and page edge from the bottom
+  bottom=2 cm,
+  % Seperation between body and page edge from the left
+  left=2 cm,
+  % Seperation between body and page edge from the right
+  right=2 cm,
+  % Seperation between body and footer
+  footskip=1.0 cm,
+  % Showframe % for debugging
+]{geometry}
+% For customizing section titles
+\usepackage{titlesec}
+% For making tables with fixed width columns
+\usepackage{tabularx}
+% Tabularx requires this
+\usepackage{array}
+% For coloring text
+\usepackage[dvipsnames]{xcolor}
+% Define primary color
+\definecolor{primaryColor}{RGB}{0, 0, 0}
+% For customizing lists
+\usepackage{enumitem}
+% For using icons
+\usepackage{fontawesome5}
+% For math
+\usepackage{amsmath}
+% For links, metadata and bookmarks
+\usepackage[
+    pdftitle={Saku Glumoff},
+    pdfauthor={Saku Glumoff},
+    pdfcreator={pdflatex},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+% For floating text on the page
+\usepackage[pscoord]{eso-pic}
+% For calculating lengths
+\usepackage{calc}
+% For bookmarks
+\usepackage{bookmark}
+% For getting the total number of pages
+\usepackage{lastpage}
+% For one column entries (adjustwidth environment)
+\usepackage{changepage}
+% For two and three column entries
+\usepackage{paracol}
+% For conditional statements
+\usepackage{ifthen}
+% For avoiding page brake right after the section title
+\usepackage{needspace}
+
+% Check if engine is pdflatex, xetex or luatex
+\usepackage{iftex}
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage{charter}
+
+% Some settings:
+\raggedright
+% Remove space before adjustwidth environment
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+% No header or footer
+\pagestyle{empty}
+% No section numbering
+\setcounter{secnumdepth}{0}
+% No indentation
+\setlength{\parindent}{0pt}
+% No top skip
+\setlength{\topskip}{0pt}
+% Set column seperation
+\setlength{\columnsep}{0.15cm}
+% No page numbering
+\pagenumbering{gobble}
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+% Section title spacing
+\titlespacing{\section}{
+    % Left space:
+    -1pt
+}{
+    % Top space:
+    0.3 cm
+}{
+    % Bottom space:
+    0.2 cm
+}
+
+% Custom bullet points
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+
+% New environment for highlights
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+% New environment for highlights for bullet entries
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+% New environment for one column entries
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0 cm + 0.00001 cm
+    }{
+        0 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+}
+
+% New environment for two column entries
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+% New environment for three column entries
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+% New environment for the header
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+\newcommand{\placelastupdatedtext}{
+  % Add <stuff> to current page foreground
+  \AddToShipoutPictureFG*{
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Last updated in September 2024}\hspace{\widthof{Last updated in September 2024}}
+    }}}
+  }
+}
+
+% Save the original href command in a new command
+\let\hrefWithoutArrow\href
+
+\begin{document}
+  % New command for external links:
+  \newcommand{\AND}{\unskip
+      \cleaders\copy\ANDbox\hskip\wd\ANDbox
+      \ignorespaces
+  }
+  \newsavebox\ANDbox
+  \sbox\ANDbox{$|$}
+
+  \begin{header}
+      \fontsize{25 pt}{25 pt}
+      \selectfont Saku Glumoff
+
+      \vspace{5 pt}
+      \normalsize
+      \mbox{\faIcon{map-marker-alt} Oulu, Finland}
+      \kern 5.0 pt
+      \AND
+      \kern 5.0 pt
+      \mbox{\faIcon{envelope} \hrefWithoutArrow{mailto:saku.glumoff@gmail.com}{saku.glumoff@gmail.com}}
+      \kern 5.0 pt
+      \AND
+      \kern 5.0 pt
+      \mbox{\faIcon{phone-alt} \hrefWithoutArrow{tel:+358 50 369 3654}{+358 50 369 3654}}
+      \kern 5.0 pt
+      \AND
+      \kern 5.0 pt
+      \mbox{\faIcon{github} \hrefWithoutArrow{https://github.com/SakuGlumoff}{github.com/SakuGlumoff}}
+      \vspace{5 pt}
+  \end{header}
+  \vspace{5 pt - 0.3 cm}
+  \section{Education}
+    \begin{twocolentry}{2014}
+      \textbf{OSAO Kaukovainio liiketalous}, Datanomi
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item IT support, networks, cloud servers, virtualization, domain services
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{twocolentry}{2017}
+      \textbf{Oulu University of Applied Sciences}, B.Eng. Information Technology, software development
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item Software design, hardware design, business design
+      \end{highlights}
+    \end{onecolentry}
+  \section{Experience}
+    \begin{twocolentry}{2016 -- 2017}
+      \textbf{Software Developer} at Monidor
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item Developed software and UI/UX for embedded devices running on STMicroelectornics' and Nordic Semiconductor's microcontrollers.
+        \item Created test automation tools for embedded devices using Python.
+        \item Developed software for Android phones to interface with embedded devices using Bluetooth Low Energy.
+        \item Performed user testing with actual end users.
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{twocolentry}{2017 -- 2020}
+      \textbf{Software Developer} at Huld
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item Developed software for embedded devices running on different microcontrollers.
+        \item Prototyped devices using different radios (Bluetooth Low Energy, GSM, NB-IoT, etc.).
+        \item Developed software for very small scale and low energy devices and set up a continuous integration environment for the project.
+        \item Managed networking for the Oulu office. Managed DevOps tools company-wide.
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{twocolentry}{2020 -- 2025}
+      \textbf{Senior Engineer} at Bittium Wireless
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item Developed software for Android phones.
+        \item Developed software for Nordic Semiconductor's devices to create sniffers for Bluetooth Low Energy environments.
+        \item Developed medical software for embedded devices running on Microchip's microcontrollers with an emphasis on USB functionality.
+        \item Developed software for embedded devices using multiple radios. Helped facilitate compliance testing for radios. Helped implement low power modes for different devices.
+        \item Designed a PCB used for automating user actions.
+      \end{highlights}
+    \end{onecolentry}
+  \section{Skills}
+    \begin{onecolentry}
+      \textbf{Hardware:} Schematic and layout design with KiCad, troubleshooting/measurements using oscilloscopes, logic analyzers, USB analyzers, multimeters, using microcontrollers from Atmel/Microchip/STMicroelectornics/Nordic Semiconductor/Texas Instruments and others.
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{onecolentry}
+      \textbf{Software:} C (C11), C++ (C++17), ARM assembly, Python, Bash, Git, Qt, UWP, FreeRTOS, MbedOS, Debugging with Segger J-Link and others, Docker, Jenkins
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{onecolentry}
+      \textbf{Office:} Microsoft Office suite (Word, Excel, Powerpoint, etc.) and LibreOffice suite.
+    \end{onecolentry}
+  \newpage
+  \section{Projects}
+    \begin{twocolentry}{
+      \href{https://github.com/SakuGlumoff/iida_devkit}{\faIcon{github} SakuGlumoff/iida\_devkit}
+    }
+      \textbf{Iida devkit}
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item A PCB design exercise using KiCad for hardware and Zephyr for software where the emphasis is on ethical and green design.
+        \item The result is an IoT device containing different sensors, a battery management system and an LTE Cat-M1 radio.
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{twocolentry}{
+      \href{https://github.com/SakuGlumoff/dynamic-jenkins-node}{\faIcon{github} SakuGlumoff/dynamic-jenkins-node}
+    }
+      \textbf{Dynamic Jenkins Node}
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item A node template for the Jenkins automation tool, which supports dynamic IPs.
+        \item The result is a node for the Jenkins tool, which can be behind a NAT gateway or can have a dynamically changing IP address without having to reconfigure the node each time the outwards visible IP address changes.
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+    \begin{twocolentry}{
+      \href{https://sakuglumoff.github.io/2019/10/18/Continuous-Integration-with-IAR-EW/}{\faIcon{github} Continuous integration with IAR EW}
+    }
+      \textbf{Continuous Integration with IAR Embedded Workbench}
+    \end{twocolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \begin{highlights}
+        \item A publication on how to implement continuous integration using Python and the IAR Embedded Workbench on Windows machines.
+      \end{highlights}
+    \end{onecolentry}
+    \vspace{0.3 cm}
+  \section{Languages}
+    \begin{onecolentry}
+      \textbf{Finnish:} Native
+    \end{onecolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \textbf{English:} Excellent
+    \end{onecolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \textbf{Swedish:} Fine
+    \end{onecolentry}
+    \vspace{0.1 cm}
+    \begin{onecolentry}
+      \textbf{Russian:} Fine
+    \end{onecolentry}
+    \vspace{0.1 cm}
+  \section{Hobbies}
+    \begin{highlights}
+      \item Programming/electronics
+      \item Learning the Ukrainian language
+      \item Watching movies
+      \item Gaming
+    \end{highlights}
+\end{document}
